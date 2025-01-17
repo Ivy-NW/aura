@@ -73,7 +73,7 @@ const Footer = () => {
                 <span>
                   <i className="ri-fire-fill"></i>
                 </span>
-                NFTs
+                Aura
               </h2>
               <p>
               Welcome to the world of NFTs. 
@@ -151,7 +151,7 @@ const Footer = () => {
           <Col lg="12" className=" mt-4 text-center">
             <p className="copyright">
               {" "}
-              Copyrights 2023, Made by Mayank Patidar.
+              Copyrights 2025, Made by NIL.
               All Rights Reserved.{" "}
             </p>
           </Col>

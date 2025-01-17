@@ -22,10 +22,6 @@ const NAV__LINKS = [
     display: "Create",
     url: "/create",
   },
-  {
-    display: "Contact",
-    url: "/contact",
-  },
 ];
 
 const Header = () => {
@@ -81,7 +77,7 @@ const Header = () => {
               <span>
                 <i className="ri-fire-fill"></i>
               </span>
-              NFTs
+              Aura
             </h2>
           </div>
 

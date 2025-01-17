@@ -1,48 +1,88 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import CommonSection from "../components/ui/Common-section/CommonSection";
 
 import NftCard from "../components/ui/Nft-card/NftCard";
 
-import { NFT__DATA } from "../assets/data/data";
-
 import { Container, Row, Col } from "reactstrap";
 
 import "../styles/market.css";
 
-const Market = () => {
-  const [data, setData] = useState(NFT__DATA);
+const Market = ({ NFTMarketplace }) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleCategory = () => {};
+  useEffect(() => {
+    const fetchListedItems = async () => {
+      try {
+        setLoading(true);
 
-  const handleItems = () => {};
+        // Fetch all listed items from the marketplace contract
+        const listedItems = await NFTMarketplace .getAllListedItems();
+
+        // Map the listed items to a format suitable for the UI
+        const items = await Promise.all(
+          listedItems.map(async (item) => {
+            const tokenURI = await NFTMarketplace.getTokenURI(item.tokenId);
+            const response = await fetch(tokenURI);
+            const metadata = await response.json();
+
+            return {
+              id: item.tokenId,
+              name: metadata.name,
+              image: metadata.image,
+              currentBid: parseFloat(item.price) / 1e18, // Convert price from Wei to ETH
+              seller: item.seller,
+            };
+          })
+        );
+
+        setData(items);
+      } catch (error) {
+        console.error("Error fetching listed items:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchListedItems();
+  }, [NFTMarketplace]);
+
+  const handleCategory = () => {
+    // Implement category filtering logic here
+  };
+
+  const handleItems = () => {
+    // Implement item type filtering logic here
+  };
 
   // ====== SORTING DATA BY HIGH, MID, LOW RATE =========
   const handleSort = (e) => {
     const filterValue = e.target.value;
 
     if (filterValue === "high") {
-      const filterData = NFT__DATA.filter((item) => item.currentBid >= 6);
-
+      const filterData = [...data].sort((a, b) => b.currentBid - a.currentBid);
       setData(filterData);
     }
 
     if (filterValue === "mid") {
-      const filterData = NFT__DATA.filter(
+      const filterData = data.filter(
         (item) => item.currentBid >= 5.5 && item.currentBid < 6
       );
-
       setData(filterData);
     }
 
     if (filterValue === "low") {
-      const filterData = NFT__DATA.filter(
+      const filterData = data.filter(
         (item) => item.currentBid >= 4.89 && item.currentBid < 5.5
       );
-
       setData(filterData);
     }
   };
+
+  if (loading) {
+    return <div>Loading marketplace items...</div>;
+  }
 
   return (
     <>
