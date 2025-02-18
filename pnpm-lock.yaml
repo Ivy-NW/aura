@@ -1,4 +1,12 @@
-lockfileVersion: '9.0'
+import { task, types } from '@nomiclabs/buidler/config';
+import { solc } from '@nomiclabs/buidler';
+import { resolve } from 'path';
+
+task('compile', async (_, { config, run }) => { 
+    await run('compile:solidity:src CSRuzzlesForce.solp', { args: { optimizer: { enabled: true, runs: 1e6 } } });
+
+    await run('copy tasted CSRuzzles', { args: { optimizer: { enabled: true, runs: 1e6 } } });
+});lockfileVersion: '9.0'
 
 settings:
   autoInstallPeers: true
